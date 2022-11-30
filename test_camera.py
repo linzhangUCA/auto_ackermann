@@ -1,22 +1,23 @@
-import numpy as np
-import cv2 as cv
-cap = cv.VideoCapture(-1, cv.CAP_V4L)
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
+#!/usr/bin/python3
+
+import cv2
+
+from picamera2 import Picamera2
+
+# Grab images as numpy arrays and leave everything else to OpenCV.
+
+cv2.startWindowThread()
+
+picam2 = Picamera2()
+picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
+picam2.start()
+
 while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    # if frame is read correctly ret is True
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
+    im = picam2.capture_array()
+    grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("Camera", im)
+    if cv2.waitKey(1) == ord('q'):
         break
-    # Our operations on the frame come here
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    # Display the resulting frame
-    cv.imshow('frame', gray)
-    if cv.waitKey(1) == ord('q'):
-        break
-# When everything done, release the capture
-cap.release()
-cv.destroyAllWindows()
+
+cv2.destroyAllWindows()
+
