@@ -1,4 +1,5 @@
-import pygame
+# import pygame
+from pygame.locals import *
 from pygame import event, display, joystick
 
 
@@ -13,6 +14,6 @@ js = joystick.Joystick(0)
 
 while True:
     for e in event.get():
-        if e.type == pygame.JOYAXISMOTION:
+        if e.type == JOYAXISMOTION:
             print(e)
 
