@@ -17,8 +17,10 @@ def get_numControllers():
 engine = PhaseEnableMotor(phase=24, enable=18)
 kit = ServoKit(channels=8, address=0x40)
 steer = kit.servo[0]
-THROTTLE_CAP = 0.25
-assert THROTTLE_CAP <= 1
+MAX_THROTTLE = 0.25
+STEER_CENTER = 100
+MAX_STEER = 50
+assert MAX_THROTTLE <= 1
 steer.angle = 90
 display.init()
 joystick.init()
@@ -37,14 +39,16 @@ try:
             if e.type == JOYAXISMOTION:
                 v_0 = js.get_axis(0)
                 v_4 = js.get_axis(4)
-                speed = -np.clip(v_4, -THROTTLE_CAP, THROTTLE_CAP)
-                print(f"steering joystick value: {v_4}, engine speed: {speed}")
+                print(f"steering joystick value: {v_0}, speed joystick value: {v_4}")
+                speed = -np.clip(v_4, -MAX_THROTTLE, MAX_THROTTLE)
                 if speed > 0:
                     engine.forward(speed)
                 elif speed < 0:
                     engine.backward(-speed)
                 else:
                     engine.stop()
+                ang = STEER_CENTER - MAX_STEER * v_0
+                steer.angle = ang
 except KeyboardInterrupt:
     engine.stop()
     engine.close()
