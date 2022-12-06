@@ -1,7 +1,7 @@
 from gpiozero import PhaseEnableMotor
 from time import sleep
 
-throttle = PhaseEnableMotor(phase=23, enable=18)
+throttle = PhaseEnableMotor(phase=24, enable=18)
 print("Forward")
 throttle.forward(0.2)
 sleep(4)
